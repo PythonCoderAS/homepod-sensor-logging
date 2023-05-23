@@ -7,12 +7,11 @@ name = "pypi"
 fastapi = "*"
 ormar = "*"
 asyncpg = "*"
+uvicorn = "*"
 
 [dev-packages]
 black = "*"
 isort = "*"
-uvicorn = "*"
 
 [requires]
 python_version = "3.11"
-python_full_version = "3.11.3"

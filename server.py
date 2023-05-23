@@ -4,6 +4,7 @@ from os import environ
 import databases
 import ormar
 import sqlalchemy
+from asyncpg import DuplicateTableError
 from fastapi import FastAPI, HTTPException
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.schema import CreateTable
@@ -23,13 +24,16 @@ database = databases.Database(DB_URL)
 async def startup() -> None:
     if not database.is_connected:
         await database.connect()
-        await database.execute(
-            str(
-                CreateTable(SensorRecord.Meta.table).compile(
-                    dialect=postgresql.dialect()
+        try:
+            await database.execute(
+                str(
+                    CreateTable(SensorRecord.Meta.table).compile(
+                        dialect=postgresql.dialect()
+                    )
                 )
             )
-        )
+        except DuplicateTableError:
+            pass
 
 
 @app.on_event("shutdown")
